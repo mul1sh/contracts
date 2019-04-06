@@ -14,7 +14,11 @@ contract Conference is GroupAdmin {
     uint256 public coolingPeriod;
     uint256 public payoutAmount;
     uint256[] public attendanceMaps;
-
+    uint256 public eventFee;
+    uint256 public platformFee;
+    uint256 public totalPlatformFee;
+    uint256 public totalEventFee;
+    address payable public platformOwner;
     mapping (address => Participant) public participants;
     mapping (uint256 => address) public participantsIndex;
 
@@ -25,7 +29,7 @@ contract Conference is GroupAdmin {
     }
 
     event RegisterEvent(address addr, uint256 index);
-    event FinalizeEvent(uint256[] maps, uint256 payout, uint256 endedAt);
+    event FinalizeEvent(uint256[] maps, uint256 payout, uint256 platformFee, uint256 eventFee, uint256 endedAt);
     event WithdrawEvent(address addr, uint256 payout);
     event CancelEvent(uint256 endedAt);
     event ClearEvent(address addr, uint256 leftOver);
@@ -55,16 +59,24 @@ contract Conference is GroupAdmin {
      * @param _limitOfParticipants The number of participant. The default is set to 20. The number can be changed by the owner of the event.
      * @param _coolingPeriod The period participants should withdraw their deposit after the event ends. After the cooling period, the event owner can claim the remining deposits.
      * @param _owner Who the owner of this contract should be
+     * @param _platformOwner Who the owner of this contract should be
      */
     constructor (
         string memory _name,
         uint256 _deposit,
         uint256 _limitOfParticipants,
         uint256 _coolingPeriod,
-        address payable _owner
+        address payable _owner,
+        address payable _platformOwner,
+        uint256 _eventFee,
+        uint256 _platformFee
     ) public {
         if (_owner != address(0)) {
             owner = _owner;
+        }
+
+        if (_platformOwner != address(0)) {
+           platformOwner = _platformOwner;
         }
 
         if (bytes(_name).length != 0){
@@ -90,6 +102,8 @@ contract Conference is GroupAdmin {
         } else {
             coolingPeriod = 1 weeks;
         }
+        eventFee = _eventFee;
+        platformFee = _platformFee;
     }
 
     /**
@@ -234,9 +248,17 @@ contract Conference is GroupAdmin {
         totalAttended = _totalAttended < registered ? _totalAttended : registered;
 
         if (totalAttended > 0) {
-            payoutAmount = uint256(totalBalance()) / totalAttended;
+            totalPlatformFee = totalAttended * platformFee;
+            totalEventFee = totalAttended * eventFee;
+            payoutAmount = uint256((totalBalance() - totalPlatformFee - totalEventFee)) / totalAttended;
+        }
+        if (platformOwner != address(0) && totalPlatformFee > 0) {
+           platformOwner.transfer(totalPlatformFee);
+        }
+        if (owner != address(0) && totalEventFee > 0) {
+           owner.transfer(totalEventFee);
         }
 
-        emit FinalizeEvent(attendanceMaps, payoutAmount, endedAt);
+        emit FinalizeEvent(attendanceMaps, payoutAmount, totalPlatformFee, totalEventFee, endedAt);
     }
 }

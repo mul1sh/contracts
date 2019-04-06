@@ -15,6 +15,11 @@ contract Deployer is Destructible {
         address indexed deployer
     );
 
+    constructor (
+        address payable _owner
+    ) public {
+        owner = owner;
+    }
     /**
      * Deploy a new contract.
      * @param _name The name of the event
@@ -33,7 +38,10 @@ contract Deployer is Destructible {
             _deposit,
             _limitOfParticipants,
             _coolingPeriod,
-            msg.sender
+            msg.sender,
+            owner,
+            0,
+            0
         );
 
         emit NewParty(address(c), msg.sender);

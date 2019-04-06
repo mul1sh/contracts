@@ -22,7 +22,7 @@ contract('Conference', function(accounts) {
   let conference, deposit;
 
   beforeEach(async function(){
-    conference = await Conference.new('', 0, 0, 0, '0x0000000000000000000000000000000000000000');
+    conference = await Conference.new('', 0, 0, 0, '0x0000000000000000000000000000000000000000', '0x0000000000000000000000000000000000000000', 0, 0);
     deposit = await conference.deposit();
   })
 
@@ -499,6 +499,45 @@ contract('Conference', function(accounts) {
       assert.isOk(diff.gt( mulBN(deposit, 0.9) ))
 
       await getBalance(conference.address).should.eventually.eq(0)
+    })
+  })
+
+  describe('on adding event fee and platform fee', function(){
+    it.only('has fees', async function(){
+      let commitment = 1
+      let participants = 5;
+      let eventFee = commitment * 0.5;
+      let platformFee = eventFee * 0.1;
+      let commitmentInWei = toWei(commitment + '', 'ether');
+      let eventFeeInWei = toWei(eventFee + '', 'ether');
+      let platformFeeInWei = toWei(platformFee + '', 'ether');
+
+      conference = await Conference.new(
+        '',
+        commitmentInWei,
+        participants,
+        2,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        eventFeeInWei,
+        platformFeeInWei,
+      );
+      await conference.eventFee().should.eventually.eq(eventFeeInWei);
+      await conference.platformFee().should.eventually.eq(platformFeeInWei);
+      await conference.register({value:commitmentInWei, from:owner});
+      await conference.register({value:commitmentInWei, from:non_owner});
+      await conference.register({value:commitmentInWei, from:accounts[2]});
+      await conference.register({value:commitmentInWei, from:accounts[3]});
+      await conference.register({value:commitmentInWei, from:accounts[4]});
+      await conference.finalize([1], {from:owner});
+      await conference.isAttended(owner).should.eventually.eq(true);
+      await conference.isAttended(non_owner).should.eventually.eq(false);
+      await conference.totalAttended().should.eventually.eq(1);
+      await conference.ended().should.eventually.eq(true);
+      const payout = (commitment  * participants) - platformFee - eventFee;
+      await conference.payoutAmount().should.eventually.eq( toWei(payout + '', 'ether'));
+      await conference.totalPlatformFee().should.eventually.eq( toWei((platformFee) + '', 'ether'));
+      await conference.totalEventFee().should.eventually.eq( toWei((eventFee) + '', 'ether'));
     })
   })
 })
