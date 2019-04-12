@@ -31,7 +31,9 @@ contract Deployer is Destructible {
         string calldata _name,
         uint256 _deposit,
         uint _limitOfParticipants,
-        uint _coolingPeriod
+        uint _coolingPeriod,
+        uint256 _eventFee,
+        uint256 _platformFee
     ) external {
         Conference c = new Conference(
             _name,
@@ -40,8 +42,8 @@ contract Deployer is Destructible {
             _coolingPeriod,
             msg.sender,
             owner,
-            0,
-            0
+            _eventFee,
+            _platformFee
         );
 
         emit NewParty(address(c), msg.sender);

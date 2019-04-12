@@ -10,9 +10,13 @@ const { sha3 }  = require('web3-utils')
 let config = {};
 let name = ''; // empty name falls back to the contract default
 let deposit = 0; // 0 falls back to the contract default
+let eventFee = 0; // 0 falls back to the contract default
+let platformFee = 0; // 0 falls back to the contract default
 let tld = 'eth';
 let limitOfParticipants = 0; // 0 falls back to the contract default
-// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15}'
+// some random address
+let platformAccount = '0x4ef57fad87ce46e3f63c8f6b7a1acb987e9140fe'
+// eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15, "owner":"owner"}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
 }
@@ -27,9 +31,9 @@ module.exports = function(deployer) {
     limitOfParticipants = config.limitOfParticipants;
   }
 
-  return deployer.deploy(Deployer)
+  return deployer.deploy(Deployer, platformAccount)
     .then(() => {
       console.log([name, deposit,limitOfParticipants, coolingPeriod].join(','));
-      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, '0x0000000000000000000000000000000000000000');
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, eventFee, platformFee);
     })
   };
