@@ -506,8 +506,8 @@ contract('Conference', function(accounts) {
     it.only('has fees', async function(){
       let commitment = 1
       let participants = 5;
-      let eventFee = commitment * 0.5;
-      let platformFee = eventFee * 0.1;
+      let eventFee = commitment * participants * 0.5 ;
+      let platformFee = eventFee * participants * 0.1;
       let commitmentInWei = toWei(commitment + '', 'ether');
       let eventFeeInWei = toWei(eventFee + '', 'ether');
       let platformFeeInWei = toWei(platformFee + '', 'ether');

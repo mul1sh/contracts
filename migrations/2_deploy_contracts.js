@@ -16,6 +16,7 @@ let tld = 'eth';
 let limitOfParticipants = 0; // 0 falls back to the contract default
 // some random address
 let platformAccount = '0x4ef57fad87ce46e3f63c8f6b7a1acb987e9140fe'
+let ownerAccount = '0xa5313060f9fa6b607ac8ca8728a851166c9f6127'
 // eg: truffle migrate --config '{"name":"CodeUp No..", "limitOfParticipants":15, "owner":"owner"}'
 if (yargs.argv.config) {
   config = JSON.parse(yargs.argv.config);
@@ -34,6 +35,7 @@ module.exports = function(deployer) {
   return deployer.deploy(Deployer, platformAccount)
     .then(() => {
       console.log([name, deposit,limitOfParticipants, coolingPeriod].join(','));
-      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, eventFee, platformFee);
+      return deployer.deploy(Conference, name, deposit,limitOfParticipants, coolingPeriod, ownerAccount, platformAccount, eventFee, platformFee);
     })
   };
+

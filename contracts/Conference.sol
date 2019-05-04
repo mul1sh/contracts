@@ -248,8 +248,8 @@ contract Conference is GroupAdmin {
         totalAttended = _totalAttended < registered ? _totalAttended : registered;
 
         if (totalAttended > 0) {
-            totalPlatformFee = totalAttended * platformFee;
-            totalEventFee = totalAttended * eventFee;
+            totalPlatformFee = registered * platformFee;
+            totalEventFee = registered * eventFee;
             payoutAmount = uint256((totalBalance() - totalPlatformFee - totalEventFee)) / totalAttended;
         }
         if (platformOwner != address(0) && totalPlatformFee > 0) {
