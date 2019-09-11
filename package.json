@@ -1,5 +1,5 @@
 {
-  "name": "@wearekickback/contracts",
+  "name": "@wearekickback/contracts-kovan",
   "version": "1.1.4",
   "description": "Kickback smart contracts",
   "main": "index.js",
