@@ -119,8 +119,8 @@ function shouldStressTest () {
     })
   })
 
-  describe('300 participants', function() {
-    const num = 300
+  describe('260 participants', function() {
+    const num = 260
 
     it('finalize', async function(){
       await reportFinalize(num, ctx)
