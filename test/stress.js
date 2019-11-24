@@ -10,6 +10,7 @@ web3.currentProvider.sendAsync = web3.currentProvider.send
 
 contract('ETH Conference - stress tests', function(accounts) {
   beforeEach(async function(){
+    console.log(new Date())
     this.accounts = accounts
     this.createConference = ({
       name = '',

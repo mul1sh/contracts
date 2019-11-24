@@ -11,6 +11,7 @@ web3.currentProvider.sendAsync = web3.currentProvider.send
 contract('ERC20 Conference - stress tests', function(accounts) {
   let token;
   beforeEach(async function(){
+    console.log(new Date())
     token = await Token.new();
     this.accounts = accounts
     this.createConference = ({

@@ -1,4 +1,5 @@
 
+
 const { toBN } = require('web3-utils')
 const { outputBNs } = require('../utils')
 const { calculateFinalizeMaps } = require('@wearekickback/shared')
@@ -36,6 +37,7 @@ function shouldHandleLargeParty () {
     })
 
     it('requires valid input to succeed', async () => {
+      console.log(new Date())
       await createConferenceAndRegisterParticipants()
       await conference.finalize([1], {from:owner}).should.be.rejected;
       await conference.finalize([1, 1, 1], {from:owner}).should.be.rejected;
@@ -44,6 +46,7 @@ function shouldHandleLargeParty () {
 
     describe('success modes', () => {
       beforeEach(async () => {
+        console.log(new Date())
         await createConferenceAndRegisterParticipants()
       })
 
