@@ -18,7 +18,7 @@ function shouldHandleLargeParty () {
   })
 
   describe('finalize large party using attendee bitmaps', function(){
-    const numRegistered = 260
+    const numRegistered = 300
     let createConferenceAndRegisterParticipants
 
     beforeEach(async function(){
@@ -203,7 +203,7 @@ function shouldHandleLargeParty () {
         }
 
         let n2 = toBN(0)
-        for (let i = 0; i < (260 - 256); i += 1) {
+        for (let i = 0; i < (300 - 256); i += 1) {
           n2 = n2.bincn(i)
         }
 
