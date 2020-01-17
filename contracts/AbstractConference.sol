@@ -124,6 +124,7 @@ contract AbstractConference is Conference, GroupAdmin {
     * addresses[i] will receive values[i]
     * The function emits the event SendAndWithdraw with the following informations:
     * (addresses, values, participant address, payoutAmount - sum(values), payoutAmount)
+    * Any leftover will be sent back to msg.sender
     */
     function sendAndWithdraw(address payable[] calldata addresses, uint256[] calldata values) external canWithdraw onlyEnded {
         require(addresses.length == values.length, 'more addresses than values or viceversa');
