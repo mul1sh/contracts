@@ -134,10 +134,7 @@ contract AbstractConference is Conference, GroupAdmin {
         uint256 sumOfValues = 0;
         for(uint i = 0; i < addresses.length; i++) {
             sumOfValues = sumOfValues.add(values[i]);
-            
-            if(sumOfValues > payoutAmount)
-                revert('payout amount is less than sum of values');
-
+            require(sumOfValues <= payoutAmount, 'payout amount is less than sum of values');
             doWithdraw(addresses[i], values[i]);
         }
                 

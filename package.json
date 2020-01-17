@@ -73,6 +73,7 @@
     "yargs": "^9.0.1"
   },
   "dependencies": {
+    "@openzeppelin/test-helpers": "^0.5.4",
     "@wearekickback/shared": "^1.14.0",
     "openzeppelin-solidity": "^2.3.0"
   },

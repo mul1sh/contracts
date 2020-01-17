@@ -2,7 +2,7 @@ const { toBN, toWei } = require('web3-utils')
 const EthVal = require('ethval')
 const { mulBN, outputBNs } = require('./../utils')
 const { wait, waitUntilBlock } = require('@digix/tempo')(web3);
-
+const { expectRevert } = require('@openzeppelin/test-helpers');
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
 web3.currentProvider.sendAsync = web3.currentProvider.send
@@ -494,7 +494,10 @@ function shouldBehaveLikeConference () {
 
     it('payout amount is less than sum of values', async function(){
       await conference.cancel({from:owner});
-      await conference.sendAndWithdraw([accounts[2]], [toWei('1', "ether")], {from:registered}).should.be.rejected;
+      await expectRevert(
+        conference.sendAndWithdraw([accounts[2]], [toWei('1', "ether")], {from:registered}),
+        'payout amount is less than sum of values',
+      );
       assertBalanceWithDeposit((await getBalance(conference.address)), mulBN(deposit, 2))
     })
 
